@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Game ID</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div id="app" class="container mx-auto my-4 px-2"></div>
+    <script src="https://cdn.jsdelivr.net/npm/dataformsjs@4.0.1/js/react/jsxLoader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"
+        crossorigin="anonymous"></script>
+    <script type="text/babel">
+        const GameList = {
+            allb: { nam: "アサルトリリィ Last Bullet", web: "https://assaultlily.jp/" },
+            arcaea: { nam: "Arcaea", web: "https://arcaea.lowiro.com/" },
+            ba: { nam: "蔚蓝档案 (ブルアカ)", act: true, web: "https://bluearchive.nexon.com/" },
+            cgss: { nam: "デレステ", web: "https://cinderella.idolmaster.jp/sl-stage/" },
+            d4dj: { nam: "D4DJ Groovy Mix (グルミク)", web: "https://d4dj.bushimo.jp/" },
+            gbp: { nam: "ガルパ", web: "https://bang-dream.bushimo.jp/" },
+            genshin: { nam: "Genshin Impact", web: "https://genshin.mihoyo.com/en" },
+            hwpl: { nam: "HoneyWorks Premium Live (ハニプレ)", web: "https://honeyworks-game.com/" },
+            ipri: { nam: "IDOLY PRIDE (アイプラ)", act: true, web: "https://idolypride.jp/game/" },
+            mltd: { nam: "ミリシタ", act: true, web: "https://millionlive-theaterdays.idolmaster-official.jp/" },
+            pcr: { nam: "超異域公主連結！Re:Dive (プリコネ)", web: "http://www.princessconnect.so-net.tw/" },
+            sekai: { nam: "Project SEKAI COLORFUL STAGE feat. Hatsune Miku (プロセカ)", web: "https://pjsekai.sega.jp/" },
+            t7s: { nam: "Tokyo 7th Sisters (ナナスタ)", web: "https://t7s.jp/game/index.html" },
+        }
+
+        const COLOR_ACTIVE = "bg-emerald-200"
+
+        const getRecord = (domain) => {
+            const u = new URL("https://1.1.1.1/dns-query")
+            u.searchParams.set("name", domain)
+            u.searchParams.set("type", "TXT")
+            return fetch(String(u), {
+                headers: {
+                    "Accept": "application/dns-json"
+                }
+            }).then(x => x.json())
+        }
+
+        const ColorBox = ({ color, text }) => {
+            return (
+                <div className="flex">
+                    <div className={`${color} w-6 h-6`}></div>
+                    <div className="ml-2">{text}</div>
+                </div>
+            )
+        }
+
+        const GameId = ({ slug, item }) => {
+            const [acctId, setAcctId] = React.useState(null)
+            const [desc, setDesc] = React.useState("")
+
+            const { nam, act, web } = item
+
+            React.useEffect(() => {
+                getRecord(`${slug}.i.outv.im`).then(x => {
+                    if (x.Status !== 0) {
+                        setAcctId("Error")
+                    } else {
+                        const ret = x.Answer[0].data.replace(/^"/, "").replace(/"$/, "")
+                        const parts = ret.split(";")
+                        setAcctId(parts[0].trim())
+                        setDesc(parts.slice(1).join(";").trim())
+                    }
+                })
+            }, [slug])
+
+
+            return (
+                <div className={`p-2 border border-solid rounded border-neutral-400 ${act ? COLOR_ACTIVE : ""}`}>
+                    <div>
+                        <b>{nam}</b>
+                        <span className="ml-2 text-sm italic">{desc}</span>
+                    </div>
+                    <div className="font-mono">{acctId}</div>
+                    <div>
+                        {web && <a href={web} className="text-blue-700 hover:underline active:underline">Website</a>}
+                    </div>
+                </div>
+            )
+        }
+
+        const App = () => {
+            return (
+                <>
+                    <h1 className="text-5xl font-bold mb-3 text-center">Game ID</h1>
+                    <ColorBox color={COLOR_ACTIVE} text="Active" />
+                    <hr className="my-1" />
+                    <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+                        {
+                            Object.entries(GameList).map(([slug, item], key) => (
+                                <GameId slug={slug} item={item} key={key} />
+                            ))
+                        }</div>
+                </>
+            )
+        }
+
+        ReactDOM
+            .createRoot(
+                document.querySelector('#app')
+            )
+            .render(<App />)
+    </script>
+</body>
+
+</html>

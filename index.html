@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Game ID</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style id="__style">
+        :target {
+            background-color: yellow !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -28,10 +33,17 @@
             sekai: { nam: "Project SEKAI COLORFUL STAGE feat. Hatsune Miku (プロセカ)", web: "https://pjsekai.sega.jp/" },
             sif2: { nam: "ラブライブ！スクールアイドルフェスティバル2 MIRACLE LIVE! （スクフェス2）", web: "https://lovelive-sif2.bushimo.jp/" },
             t7s: { nam: "Tokyo 7th Sisters (ナナスタ)", act: true, web: "https://t7s.jp/game/index.html" },
-            wds: { nam: "ワールドダイスター 夢のステラリウム (ユメステ)", act: true, web: "https://world-dai-star.com/game/"}
+            wds: { nam: "ワールドダイスター 夢のステラリウム (ユメステ)", act: true, web: "https://world-dai-star.com/game/" }
         }
 
         const COLOR_ACTIVE = "bg-emerald-200"
+
+        const refreshStyles = () => {
+            const elem = document.querySelector('#__style')
+            const c = elem.innerHTML
+            elem.innerHTML = ""
+            elem.innerHTML = c
+        }
 
         const getRecord = (domain) => {
             const u = new URL("https://1.1.1.1/dns-query")
@@ -74,7 +86,7 @@
 
 
             return (
-                <div className={`p-2 rounded ${act ? COLOR_ACTIVE : ""}`}>
+                <div id={slug} className={`p-2 rounded ${act ? COLOR_ACTIVE : ""}`}>
                     <div>
                         <b>{nam}</b>
                         <span className="ml-2 text-sm italic">{desc}</span>
@@ -108,6 +120,7 @@
                 document.querySelector('#app')
             )
             .render(<App />)
+        refreshStyles()
     </script>
 </body>
 

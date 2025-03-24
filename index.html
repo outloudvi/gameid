@@ -24,18 +24,18 @@
     <script type="text/babel">
         const GameList = {
             arcaea: { nam: "Arcaea", web: "https://arcaea.lowiro.com/" },
-            ba: { nam: "蔚蓝档案 (ブルアカ)", web: "https://bluearchive.nexon.com/" },
-            cgss: { nam: "デレステ", web: "https://cinderella.idolmaster.jp/sl-stage/" },
-            d4dj: { nam: "D4DJ Groovy Mix (グルミク)", web: "https://d4dj.bushimo.jp/" },
-            gakumas: { nam: "学園アイドルマスター", web: "https://gakuen.idolmaster-official.jp/" },
-            gbp: { nam: "ガルパ", web: "https://bang-dream.bushimo.jp/" },
-            ipri: { nam: "IDOLY PRIDE (アイプラ)", web: "https://idolypride.jp/game/" },
-            mltd: { nam: "ミリシタ", web: "https://millionlive-theaterdays.idolmaster-official.jp/" },
-            restage: { nam: "Re:ステージ！プリズムステップ (リステップ)", web: "https://rst-project.com/game/" },
-            sekai: { nam: "Project SEKAI COLORFUL STAGE feat. Hatsune Miku (プロセカ)", web: "https://pjsekai.sega.jp/" },
-            sfp: { nam: "アイドルマスター シャイニーカラーズ Song for Prism（シャニソン）", web: "https://shinycolors-song-for-prism.idolmaster-official.jp/" },
-            t7s: { nam: "Tokyo 7th Sisters (ナナスタ)", act: true, web: "https://t7s.jp/game/index.html" },
-            wds: { nam: "ワールドダイスター 夢のステラリウム (ユメステ)", web: "https://world-dai-star.com/game/" }
+            ba: { nam: "蔚蓝档案", snm: "ブルアカ", web: "https://bluearchive.nexon.com/" },
+            cgss: { nam: "アイドルマスター シンデレラガールズ　スターライトステージ", snm: "デレステ", web: "https://cinderella.idolmaster.jp/sl-stage/" },
+            d4dj: { nam: "D4DJ Groovy Mix", snm: "グルミク", web: "https://d4dj.bushimo.jp/" },
+            gakumas: { nam: "学園アイドルマスター", snm: "学マス", web: "https://gakuen.idolmaster-official.jp/" },
+            gbp: { nam: "バンドリ！ ガールズバンドパーティ！", snm: "ガルパ", web: "https://bang-dream.bushimo.jp/" },
+            ipri: { nam: "IDOLY PRIDE", snm: "アイプラ", web: "https://idolypride.jp/game/" },
+            mltd: { nam: "アイドルマスター ミリオンライブ！ シアターデイズ", snm: "ミリシタ", web: "https://millionlive-theaterdays.idolmaster-official.jp/" },
+            restage: { nam: "Re:ステージ！プリズムステップ", snm: "リステップ", web: "https://rst-project.com/game/" },
+            sekai: { nam: "プロジェクトセカイ カラフルステージ！ feat. 初音ミク", snm: "プロセカ", web: "https://pjsekai.sega.jp/" },
+            sfp: { nam: "アイドルマスター シャイニーカラーズ Song for Prism", snm: "シャニソン", web: "https://shinycolors-song-for-prism.idolmaster-official.jp/" },
+            t7s: { nam: "Tokyo 7th シスターズ", snm: "ナナスタ", act: true, web: "https://t7s.jp/game/index.html" },
+            wds: { nam: "ワールドダイスター 夢のステラリウム", snm: "ユメステ", web: "https://world-dai-star.com/game/" }
         }
 
         const COLOR_ACTIVE = "bg-emerald-200"
@@ -71,7 +71,7 @@
             const [acctId, setAcctId] = React.useState(null)
             const [desc, setDesc] = React.useState("")
 
-            const { nam, act, web } = item
+            const { nam, snm, act, web } = item
 
             React.useEffect(() => {
                 getRecord(`${slug}.i.outv.im`).then(x => {
@@ -92,9 +92,10 @@
             return (
                 <div id={slug} className={`p-2 rounded ${act ? COLOR_ACTIVE : ""}`}>
                     <div>
-                        <b>{nam}</b>
+                        <b>{snm ?? nam}</b>
                         <span className="ml-2 text-sm italic">{desc}</span>
                     </div>
+                    {snm && <div className="text-sm text-neutral-700 mt-1 mb-2">{nam}</div>}
                     <div className="font-mono" ref={ref} onClick={() => {
                         const sel = getSelection()
                         sel.selectAllChildren(ref.current)
